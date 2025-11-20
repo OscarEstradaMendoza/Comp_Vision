@@ -102,10 +102,67 @@
             gap: 20px;
         }
         
+        .form-row {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 400px;
+        }
+        
         .file-input-wrapper {
             position: relative;
             width: 100%;
-            max-width: 400px;
+        }
+        
+        .select-wrapper {
+            width: 100%;
+        }
+        
+        .select-label {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #00ffff;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .select-input {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #00ffff;
+            border-radius: 8px;
+            color: #00ffff;
+            font-size: 1rem;
+            font-family: 'Rajdhani', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2300ffff' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            padding-right: 40px;
+        }
+        
+        .select-input:hover {
+            border-color: #ff00ff;
+            background-color: rgba(0, 0, 0, 0.9);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+        }
+        
+        .select-input:focus {
+            outline: none;
+            border-color: #00ff00;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+        }
+        
+        .select-input option {
+            background: #0a0a0a;
+            color: #00ffff;
+            padding: 10px;
         }
         
         .file-input {
@@ -261,6 +318,61 @@
             0% { transform: translateY(0); }
             100% { transform: translateY(4px); }
         }
+        
+        .audio-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .audio-player {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            outline: none;
+        }
+        
+        .audio-player::-webkit-media-controls-panel {
+            background-color: rgba(0, 0, 0, 0.8);
+            border: 2px solid #00ffff;
+            border-radius: 10px;
+        }
+        
+        .audio-player::-webkit-media-controls-play-button {
+            background-color: #00ffff;
+            border-radius: 50%;
+        }
+        
+        .play-audio-btn {
+            margin-top: 15px;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #00ff00, #00ffff);
+            border: 2px solid #00ff00;
+            border-radius: 8px;
+            color: #0a0a0a;
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: 'Orbitron', monospace;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 0 20px rgba(0, 255, 0, 0.5),
+                inset 0 0 10px rgba(255, 255, 255, 0.2);
+        }
+        
+        .play-audio-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 0 30px rgba(0, 255, 0, 0.8),
+                0 0 40px rgba(0, 255, 255, 0.6),
+                inset 0 0 15px rgba(255, 255, 255, 0.3);
+            border-color: #00ffff;
+        }
+        
+        .play-audio-btn:active {
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body>
@@ -279,9 +391,33 @@
             {% endwith %}
             
             <form class="upload-form" method="POST" enctype="multipart/form-data">
-                <div class="file-input-wrapper">
-                    <input type="file" name="file" class="file-input" accept="image/*" required>
+                <div class="form-row">
+                    <div class="file-input-wrapper">
+                        <input type="file" name="file" class="file-input" accept="image/*" required>
+                    </div>
+                    
+                    <div class="select-wrapper">
+                        <label class="select-label" for="mode">Mode</label>
+                        <select name="mode" id="mode" class="select-input" required>
+                            <option value="caption" {% if mode == 'caption' %}selected{% endif %}>Caption</option>
+                            <option value="story" {% if mode == 'story' %}selected{% endif %}>Story</option>
+                            <option value="poetic" {% if mode == 'poetic' %}selected{% endif %}>Poetic</option>
+                            <option value="funny" {% if mode == 'funny' %}selected{% endif %}>Funny</option>
+                        </select>
+                    </div>
+                    
+                    <div class="select-wrapper">
+                        <label class="select-label" for="emotion">Emotion</label>
+                        <select name="emotion" id="emotion" class="select-input" required>
+                            <option value="calm" {% if emotion == 'calm' %}selected{% endif %}>Calm</option>
+                            <option value="energetic" {% if emotion == 'energetic' %}selected{% endif %}>Energetic</option>
+                            <option value="sad" {% if emotion == 'sad' %}selected{% endif %}>Sad</option>
+                            <option value="robotic" {% if emotion == 'robotic' %}selected{% endif %}>Robotic</option>
+                            <option value="whisper" {% if emotion == 'whisper' %}selected{% endif %}>Whisper</option>
+                        </select>
+                    </div>
                 </div>
+                
                 <button type="submit" class="upload-btn">UPLOAD</button>
             </form>
         </div>
@@ -294,9 +430,44 @@
             {% else %}
             <div class="success-message">WONDERFUL UPLOAD</div>
             {% endif %}
+            
+            {% if audio_path %}
+            <div class="audio-container">
+                <audio id="captionAudio" class="audio-player" controls preload="auto" autoplay>
+                    <source src="{{ url_for('static', filename=audio_path.replace('static/', '')) }}" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+                <br>
+                <button class="play-audio-btn" onclick="playAudio()">PLAY AUDIO</button>
+            </div>
+            {% endif %}
         </div>
         {% endif %}
     </div>
+    
+    <script>
+        // Auto-play audio when page loads (if audio exists)
+        window.addEventListener('load', function() {
+            const audio = document.getElementById('captionAudio');
+            if (audio) {
+                // Try to play audio automatically
+                audio.play().catch(function(error) {
+                    // Auto-play was prevented by browser
+                    console.log('Auto-play prevented. User interaction required.');
+                });
+            }
+        });
+        
+        // Function to play audio (fallback button)
+        function playAudio() {
+            const audio = document.getElementById('captionAudio');
+            if (audio) {
+                audio.play().catch(function(error) {
+                    console.error('Error playing audio:', error);
+                });
+            }
+        }
+    </script>
 </body>
 </html>
 
