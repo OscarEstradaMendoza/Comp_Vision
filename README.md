@@ -9,12 +9,15 @@ A cyberpunk-themed Flask web application that generates captions for uploaded im
 - 🔊 Text-to-speech audio generation from captions
 - 🎨 Futuristic cyberpunk-themed UI
 - ⚡ Optimized for M1 Mac with MPS (Metal Performance Shaders) support
+- 📝 Multiple caption modes: Caption, Story, Poetic, Funny
+- 🎭 Multiple emotion styles: Calm, Energetic, Sad, Robotic, Whisper
 
 ## Requirements
 
 - Python 3.8+
 - M1 Mac (or compatible system with 16GB+ RAM)
 - Internet connection (for model downloads and text-to-speech)
+- ffmpeg (for emotion-based audio processing)
 
 ## Installation
 
@@ -37,6 +40,18 @@ venv\Scripts\activate  # On Windows
 pip install -r requirements.txt
 ```
 
+4. Install ffmpeg (for audio emotion processing):
+```bash
+# macOS
+brew install ffmpeg
+
+# Linux
+sudo apt-get install ffmpeg
+
+# Windows
+# Download from https://ffmpeg.org/download.html
+```
+
 ## Usage
 
 1. Start the Flask application:
@@ -49,7 +64,7 @@ python app.py
 http://localhost:8000
 ```
 
-3. Upload an image to generate a caption and hear it spoken aloud!
+3. Upload an image, select a mode (Caption, Story, Poetic, or Funny) and an emotion (Calm, Energetic, Sad, Robotic, or Whisper), then click UPLOAD to generate a caption and hear it spoken aloud!
 
 ## Project Structure
 
@@ -73,6 +88,7 @@ CVProject/
 - **Hugging Face Transformers** - BLIP image captioning model
 - **gTTS (Google Text-to-Speech)** - Text-to-audio conversion
 - **Pillow** - Image processing
+- **ffmpeg** - Audio processing for emotion effects
 
 ## Model Information
 
@@ -85,8 +101,9 @@ CVProject/
 - First run will download the BLIP model (~990MB), which may take a few minutes
 - Requires internet connection for text-to-speech generation
 - Browser may block auto-play of audio; use the play button if needed
+- Different modes transform the caption in creative ways (poetic, story, funny)
+- Different emotions apply audio effects to the generated speech
 
 ## License
 
 MIT License
-
